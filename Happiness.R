@@ -2,6 +2,7 @@ install.packages("dplyr")
 library(dplyr)
 library(data.table)
 
+#test
 
 #reading datasets in
 countries_income <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/countries.csv')
