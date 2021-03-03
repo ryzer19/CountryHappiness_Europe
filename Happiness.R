@@ -31,11 +31,6 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
     joined_df <- left_join(year1, year2, 
                                by = c("Country" = "Country"))
     
-    joined_df_countries_added <- left_join(year1, countries_income, 
-                           by = c("Country" = "Country"))
-    #adds the average happiness into the column that used to have the happiness for 1 year
-    joined_df$Happiness_Score.x <- paste(average_happiness$Happiness_Score)
-    
     #gets average values & creates dataframes
     average_happiness <- (joined_df[4] + joined_df[13])/2
     average_gdp <- (joined_df[5] + joined_df[14])/2
@@ -63,5 +58,24 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
     joined_df$Corruption_Perception.x <- paste(average_corruption$Corruption_Perception.x)
     joined_df$Generosity.x <- paste(average_generosity$Generosity.x)
     
+    #countries income & country code added to joined_df
+    joined_df <- left_join(joined_df, countries_income, 
+                           by = c("Country" = "Country"))
+    
+    #delete rows 11-19 on joined df country frame as they are not needed anymore
+    joined_df <- select(joined_df, -11:-19)
+    
+    #reorder to put country code beside country
+    joined_df <- joined_df[, c(11,1,2,3,4,5,6,7,8,9,10,12,13)]
+    
+    #RENAMING
+        #changing dataframe name
+        happiness_factors <- joined_df
+        
+        #changing column names of finalised data frame - happiness_factors
+        names(happiness_factors)[1:13] <- c("Country_ID","Country","Region",
+                                "Happiness_Rank","Happiness_Score","GDP_PerCapita",
+                                "Family","Life_Expectancy","Freedom","Corruption_Perception","Generosity", "Monthly_Net", "Annual_Net")
+        
 
     
