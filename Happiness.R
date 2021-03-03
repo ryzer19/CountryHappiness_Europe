@@ -33,20 +33,10 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
     
     joined_df_countries_added <- left_join(year1, countries_income, 
                            by = c("Country" = "Country"))
-    
-    #adds country names to average
-    joined_df$Country <- paste(joined_df$Country)
-
     #adds the average happiness into the column that used to have the happiness for 1 year
     joined_df$Happiness_Score.x <- paste(average_happiness$Happiness_Score)
     
-    #changes name for column 1 in avg happiness data frame
-    names(average_happiness)[1] <- "Happiness_Score"
-
-    #gets average values for happiness rating
-    average_happiness <- (joined_df[4] + joined_df[13])/2
-
-    #gets average values for happiness rating
+    #gets average values & creates dataframes
     average_happiness <- (joined_df[4] + joined_df[13])/2
     average_gdp <- (joined_df[5] + joined_df[14])/2
     average_family <- (joined_df[6] + joined_df[15])/2
@@ -55,10 +45,23 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
     average_corruption <- (joined_df[9] + joined_df[18])/2
     average_generosity <- (joined_df[10] + joined_df[19])/2
     
-    #changes name for column 1 in avg happiness data frame
-    names(average_happiness)[1] <- "Happiness_Score"
+    #adds country to averages dataframes
+    average_happiness$Country <- paste(joined_df$Country)
+    average_gdp$Country <- paste(joined_df$Country)
+    average_family$Country <- paste(joined_df$Country)
+    average_lifeexpectancy$Country <- paste(joined_df$Country)
+    average_freedom$Country <- paste(joined_df$Country)
+    average_corruption$Country <- paste(joined_df$Country)
+    average_generosity$Country <- paste(joined_df$Country)
     
     #adds the average happiness into the column that used to have the happiness for 1 year
     joined_df$Happiness_Score.x <- paste(average_happiness$Happiness_Score)
+    joined_df$GDP_Per_Capita.x <- paste(average_gdp$GDP_Per_Capita.x)
+    joined_df$Family.x <- paste(average_family$Family.x)
+    joined_df$Life_Expectancy.x <- paste(average_lifeexpectancy$Life_Expectancy.x)
+    joined_df$Freedom.x <- paste(average_freedom$Freedom.x)
+    joined_df$Corruption_Perception.x <- paste(average_corruption$Corruption_Perception.x)
+    joined_df$Generosity.x <- paste(average_generosity$Generosity.x)
+    
 
-    #test
+    
