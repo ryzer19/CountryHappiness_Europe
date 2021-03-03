@@ -2,8 +2,6 @@ install.packages("dplyr")
 library(dplyr)
 library(data.table)
 
-#test2
-
 #reading datasets in (Ryan)
 countries_income <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/countries.csv')
 year1 <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/year1.csv')
@@ -77,5 +75,27 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
                                 "Happiness_Rank","Happiness_Score","GDP_PerCapita",
                                 "Family","Life_Expectancy","Freedom","Corruption_Perception","Generosity", "Monthly_Net", "Annual_Net")
         
+    #map
+        library(ggplot2)
+        library(plotly)
+        library(dplyr)
+        library(readr)
 
+        happiness_map = plot_geo(happiness_factors,
+                               locationmode = 'europe') %>%
+        
+          add_trace (locations = ~Country_ID,
+                     text = paste0('Country: ', happiness_factors$Country, '<br>Happiness Score: ', happiness_factors$Happiness_Score, '<br>Annual Income: ', happiness_factors$Annual_Net),
+                     hoverinfo = 'text',
+                     z = ~Happiness_Score,
+                     zmin = 0,
+                     zmax = max(happiness_factors$Happiness_Score),
+                     color = ~Happiness_Score) %>%
+          
+          layout(geo = list(scope = 'europe'),
+                 title = "Happiness Rating By Country") %>%
+          
+          config(displayModeBar = FALSE) 
+        
+        happiness_map
     
