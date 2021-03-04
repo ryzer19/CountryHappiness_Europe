@@ -1,4 +1,7 @@
 install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("plotly")
+install.packages("readr")
 library(dplyr)
 library(data.table)
 
@@ -95,7 +98,7 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
           layout(geo = list(scope = 'europe'),
                  title = "Happiness Rating By Country") %>%
           
-          config(displayModeBar = FALSE) 
+          config(displayModeBar = FALSE)
         
         happiness_map
     
