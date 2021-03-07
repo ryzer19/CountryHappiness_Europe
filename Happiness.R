@@ -90,13 +90,14 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
           add_trace (locations = ~Country_ID,
                      text = paste0('Country: ', happiness_factors$Country, '<br>Happiness Score: ', happiness_factors$Happiness_Score, '<br>Annual Income: ', happiness_factors$Annual_Net),
                      hoverinfo = 'text',
-                     z = ~Happiness_Score,
+                     z = ~Annual_Net,
                      zmin = 0,
-                     zmax = max(happiness_factors$Happiness_Score),
-                     color = ~Happiness_Score) %>%
+                     zmax = max(happiness_factors$Annual_Net),
+                     color = ~Annual_Net,
+                     colorscale = 'heat') %>%
           
           layout(geo = list(scope = 'europe'),
-                 title = "Happiness Rating By Country") %>%
+                 title = "Country's With The Highest Annual Income") %>%
           
           config(displayModeBar = FALSE)
         
