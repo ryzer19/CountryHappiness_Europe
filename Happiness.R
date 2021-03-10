@@ -16,6 +16,8 @@ library(factoextra)
 countries_income <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/countries.csv')
 year1 <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/year1.csv')
 year2 <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/year2.csv')
+cluster_data <- read.csv("/Users/ryanjohnston/development/r/datamining/cluster_data.csv", header = TRUE, row.names = 1, sep = ",")
+
 
   #(Darragh)
 countries_income <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/countries.csv')
