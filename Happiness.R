@@ -104,9 +104,9 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     vars <- c("Country", "Happiness_Score", "Annual_Net")
     cluster_data <- happiness_factors[vars]
     write.csv(cluster_data,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data.csv", row.names = FALSE)
-    ################## Write to your directory ****ONCE**** ##################
+
     cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data.csv", header = TRUE, row.names = 1, sep = ",")
-    ################## Read from your directory #################
+
         
 #Visualisations & Data Mining Techniques 
         
@@ -138,11 +138,11 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
   #Model creation & testing
     model_data = subset(happiness_factors, select = c(Happiness_Score, GDP_PerCapita, Family, Life_Expectancy, Freedom, Corruption_Perception, Generosity, Annual_Net))
         
-    sample.split(model_data$Happiness_Score, SplitRatio = 0.90) -> split_index
-    train <- subset (model_data,split_index==T)
-    test <- subset (model_data,split_index==F)
-    nrow(train)
-    nrow(test)
+    sample.split(model_data$Happiness_Score, SplitRatio = 0.90) -> split_index     #sample split makes 90% of values true
+    train <- subset (model_data,split_index==T) #train is 35 values (90%)
+    test <- subset (model_data,split_index==F) #test gives 4 values (10%)
+    nrow(train) #number of rows
+    nrow(test) #number of rows
         
   #Building models
     lm(Happiness_Score~.,data=train) -> model1
