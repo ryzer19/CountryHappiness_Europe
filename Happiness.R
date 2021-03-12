@@ -83,7 +83,7 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     joined_df <- joined_df[ , -c(2,3)]
     
   #reorder to put country code beside country
-    joined_df <- joined_df[, c(9,1,2,3,4,5,6,7,8,9,10,11)]
+    joined_df <- joined_df[, c(9,1,2,3,4,5,6,7,8,10,11)]
     
 #Renaming
     
@@ -110,14 +110,62 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
 
     cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data.csv", header = TRUE, row.names = 1, sep = ",")
     
-#creating data frame with happiness score & annual income figures
-
-#reading in 3 year income dataset
-    income_3year <- read.csv("/Users/ryanjohnston/development/r/datamining/income_3years.csv", header = TRUE, row.names = 1, sep = ",")
     
-    
-    
-    
+              #creating data frame with happiness score & annual income figures
+                  #reading in 3 year income dataset
+                      income_3year <- read.csv("/Users/ryanjohnston/development/r/datamining/income_3years.csv")
+                  #reading in happiness 3 years
+                      happiness2015 <- read.csv('/Users/ryanjohnston/development/r/datamining/2015.csv')
+                      happiness2016 <- read.csv('/Users/ryanjohnston/development/r/datamining/2016.csv')
+                      happiness2017 <- read.csv('/Users/ryanjohnston/development/r/datamining/2017.csv')
+                      
+                            #joining happiness years into 1 dataframe
+                                #joining 2015 & 2016
+                                happiness <- left_join(happiness2015, happiness2016, 
+                                                       by = c("Country" = "Country"))
+                                #joining 2015+16 & 2017
+                                happiness <- left_join(happiness, happiness2017, 
+                                                       by = c("Country" = "Country"))
+                                #removes data frames - not needed anymore
+                                rm(happiness2015,happiness2016,happiness2017)
+                                
+                                #removing unnecessary columns from 'happiness' data frame
+                                happiness <- happiness[ , -c(3,5,6,7,8,9,10,11,
+                                                             12,13,14,16,17,18,19,
+                                                             20,21,22,23,24,25,27,
+                                                             28,29,30,31,32,33,34,35)]
+                                
+                                #creates criteria variable which stores two strings
+                                criteria <- c("Central and Eastern Europe", "Western Europe")
+                                     #deletes everything that doesn't contain the two strings in the criteria variable
+                                     happiness <- happiness[happiness$Region.x %in% criteria, ]
+                                    
+                                     #joining happiness for 3 years & income for 3 years
+                                     hap_inc <- left_join(happiness, income_3year, 
+                                                            by = c("Country" = "Country"))
+                                           #removing rows that contain no income values
+                                            hap_inc <- hap_inc[-c(12,14,18,22,23,29,32,34,35,46,48,49),]
+                                            
+                                    #putting country code at start of data frame
+                                    hap_inc <- hap_inc[, c(6,1,2,3,4,5,7,8,9,10,11,12)]
+                                    
+                                    #removing columns
+                                    hap_inc <- hap_inc[ , -c(3,7,8,9)]
+                                    
+                                    #renaming columns
+                                    names(hap_inc)[1:8] <- c("Country_ID","Country","Happiness_Score2015",
+                                                                       "Happiness_Score2016","Happiness_Score2017",
+                                                                       "Annual_Gross2015","Annual_Gross2016","Annual_Gross2017")
+                                    
+                                    
+                                     
+                                     
+                                
+                                
+                                
+                      
+            
+            
     
     
     
