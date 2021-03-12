@@ -9,6 +9,9 @@ library(plotly)
 library(readr)
 library(caTools)
 library(factoextra)
+library(tidyverse)
+library(cluster)
+library(gridExtra)
 
 #reading datasets
 
@@ -75,11 +78,12 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     joined_df <- left_join(joined_df, countries_income, 
                            by = c("Country" = "Country"))
     
-  #delete rows 11-19 on joined df country frame as they are not needed anymore
+  #delete columns 11-19 on joined df country frame as they are not needed anymore
     joined_df <- select(joined_df, -11:-19)
+    joined_df <- joined_df[ , -c(2,3)]
     
   #reorder to put country code beside country
-    joined_df <- joined_df[, c(11,1,2,3,4,5,6,7,8,9,10,12,13)]
+    joined_df <- joined_df[, c(9,1,2,3,4,5,6,7,8,9,10,11)]
     
 #Renaming
     
@@ -87,9 +91,8 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     happiness_factors <- joined_df
         
   #changing column names of finalised data frame - happiness_factors
-    names(happiness_factors)[1:13] <- c("Country_ID","Country","Region",
-                                "Happiness_Rank","Happiness_Score","GDP_PerCapita",
-                                "Family","Life_Expectancy","Freedom","Corruption_Perception","Generosity", "Monthly_Net", "Annual_Net")
+    names(happiness_factors)[1:11] <- c("Country_ID","Country","Happiness_Score","GDP_PerCapita",
+                                     "Family","Life_Expectancy","Freedom","Corruption_Perception","Generosity", "Monthly_Net", "Annual_Net")
         
   #Changing values from characters to numerical values
     happiness_factors$Happiness_Score <- as.numeric(happiness_factors$Happiness_Score)
@@ -106,7 +109,24 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     write.csv(cluster_data,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data.csv", row.names = FALSE)
 
     cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data.csv", header = TRUE, row.names = 1, sep = ",")
+    
+#creating data frame with happiness score & annual income figures
 
+#reading in 3 year income dataset
+    income_3year <- read.csv("/Users/ryanjohnston/development/r/datamining/income_3years.csv", header = TRUE, row.names = 1, sep = ",")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
 #Visualisations & Data Mining Techniques 
         
@@ -168,9 +188,30 @@ cluster_data <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryha
     summary(model2)
         
   #Kmeans Cluster Plot
-    cluster_data <- scale(cluster_data)
-        
-    res.dist <- get_dist(cluster_data, method = "pearson")
-    head(round(as.matrix(res.dist), 2))[, 1:6]
-        
-    res.km <- eclust(cluster_data, "kmeans", nstart = 25)
+    k2 <- kmeans(cluster_data, centers = 2, nstart = 25)
+    fviz_cluster(k2, data = cluster_data)
+    
+    k3 <- kmeans(cluster_data, centers = 3, nstart = 25)
+    k4 <- kmeans(cluster_data, centers = 4, nstart = 25)
+    k5 <- kmeans(cluster_data, centers = 5, nstart = 25)
+    
+    p1 <- fviz_cluster(k2, geom = "point", data = cluster_data) + ggtitle("k = 2")
+    p2 <- fviz_cluster(k3, geom = "point", data = cluster_data) + ggtitle("k = 3")
+    p3 <- fviz_cluster(k4, geom = "point", data = cluster_data) + ggtitle("k = 4")
+    p4 <- fviz_cluster(k5, geom = "point", data = cluster_data) + ggtitle("k = 5")
+    grid.arrange(p1, p2, p3, p4, nrow = 2)
+    
+    wssplot <- function(data, max_clusters=15) {
+      wss <- (nrow(data)-1)*sum(apply(data,2,var))
+      for (k in 2:max_clusters){
+        wss[k] <- sum(kmeans(data, centers=k)$withinss)
+      }
+      plot(1:max_clusters, wss, type="b", xlab="Number of Clusters",ylab="Within groups sum of squares")
+    }
+    
+    set.seed(42)
+    wssplot(cluster_data,10)
+    
+  #Best number of centers
+    k2 <- kmeans(cluster_data, centers = 2, nstart = 25)
+    fviz_cluster(k2, data = cluster_data)
