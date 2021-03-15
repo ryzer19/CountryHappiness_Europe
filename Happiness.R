@@ -429,4 +429,32 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                   geom_histogram(position = "identity", alpha = 0.5, bins = 13)
                 
                 #happiness rates heatmap
+                install.packages('heatmaply')
+                library(heatmaply)
+                
+                mat <- happiness_factors
+                rownames(mat) <- mat[,2]
+                mat <- mat %>% dplyr::select(-Country, -Country_ID, -Annual_Net, -Monthly_Net)
+                mat <- as.matrix(mat)
+                
+                #plotting heat map
+                heat2015 <- heatmaply(mat,
+                                      dendrogram = "none",
+                                      xlab = "", ylab = "", 
+                                      main = "",
+                                      scale = "column",
+                                      margins = c(60,100,40,20),
+                                      grid_color = "white",
+                                      grid_width = 0.00001,
+                                      titleX = FALSE,
+                                      hide_colorbar = TRUE,
+                                      branches_lwd = 0.1,
+                                      label_names = c("Country","Column" ,"Value"),
+                                      fontsize_row = 5, fontsize_col = 5,
+                                      labCol = colnames(mat),
+                                      labRow = rownames(mat),
+                                      heatmap_layers = theme(axis.line=element_blank()
+                                      ))
+                #shows heatmap
+                heat2015
                 
