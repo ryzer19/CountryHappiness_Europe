@@ -367,6 +367,12 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
     k2 <- kmeans(cluster_data2017, centers = 3, nstart = 25)
     fviz_cluster(k2, data = cluster_data2017, main = "Cluster Plot 2017")
     
+  #Display all clusters
+    p1 <- fviz_cluster(k2, geom = "point", data = cluster_data2015) + ggtitle("Cluster 2015")
+    p2 <- fviz_cluster(k2, geom = "point", data = cluster_data2016) + ggtitle("Cluster 2016")
+    p3 <- fviz_cluster(k2, geom = "point", data = cluster_data2017) + ggtitle("Cluster 2017")
+    grid.arrange(p1, p2, p3, nrow = 2)
+    
     #LINEAR REGRESSION
         #fitting linear model (y, x)
         mod2015 <- lm(hap_inc$Annual_Gross2015 ~ hap_inc$Happiness_Score2015)
