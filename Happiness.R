@@ -13,6 +13,7 @@ library(tidyverse)
 library(cluster)
 library(gridExtra)
 
+
 #reading datasets
 
   #(Ryan)
@@ -107,7 +108,7 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
               #creating data frame with happiness score & annual income figures
                   #reading in 3 year income dataset
                       income_3year <- read.csv("/Users/ryanjohnston/development/r/datamining/income_3years.csv")
-                      
+                  
                       income_3year <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/income_3years.csv")
                   #reading in happiness 3 years
                       happiness2015 <- read.csv('/Users/ryanjohnston/development/r/datamining/2015.csv')
@@ -157,23 +158,28 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                                                                        "Annual_Gross2015","Annual_Gross2016","Annual_Gross2017")
                                     
     #Cluster data frame creation (run once then read in at the top)
-        #2015
+        #2015 - D
         vars <- c("Country", "Happiness_Score2015", "Annual_Gross2015")
         cluster_data2015 <- hap_inc[vars]
         write.csv(cluster_data2015,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2015.csv", row.names = FALSE)
         cluster_data2015 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2015.csv", header = TRUE, row.names = 1, sep = ",")
         
-        #2016
+        #2016 - D
         vars <- c("Country", "Happiness_Score2016", "Annual_Gross2016")
         cluster_data2016 <- hap_inc[vars]
         write.csv(cluster_data2016,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2016.csv", row.names = FALSE)
         cluster_data2016 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2016.csv", header = TRUE, row.names = 1, sep = ",")
         
-        #2017
+        #2017 - D
         vars <- c("Country", "Happiness_Score2017", "Annual_Gross2017")
         cluster_data2017 <- hap_inc[vars]
         write.csv(cluster_data2017,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2017.csv", row.names = FALSE)
         cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2017.csv", header = TRUE, row.names = 1, sep = ",")
+        
+        #2015 - R
+        cluster_data2015 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2015.csv', header = TRUE, row.names = 1, sep = ",")
+        cluster_data2016 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2016.csv', header = TRUE, row.names = 1, sep = ",")
+        cluster_data2017 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2017.csv', header = TRUE, row.names = 1, sep = ",")
         
 #Visualisations & Data Mining Techniques 
         
@@ -360,3 +366,61 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
   #Best number of centers
     k2 <- kmeans(cluster_data2017, centers = 3, nstart = 25)
     fviz_cluster(k2, data = cluster_data2017, main = "Cluster Plot 2017")
+    
+    #LINEAR REGRESSION
+        #fitting linear model (y, x)
+        mod2015 <- lm(hap_inc$Annual_Gross2015 ~ hap_inc$Happiness_Score2015)
+        mod2016 <- lm(hap_inc$Annual_Gross2016 ~ hap_inc$Happiness_Score2016)
+        mod2017 <- lm(hap_inc$Annual_Gross2017 ~ hap_inc$Happiness_Score2017)
+    
+        #income/happiness scatter plot
+            #2015
+            plot(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015, main="2015",
+                 xlab = "Happiness Score", ylab = "Income")
+                  abline(mod2015, col=5, lwd=2.5)
+            #2016
+            plot(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016, main="2016",
+              xlab = "Happiness Score", ylab = "Income")
+                 abline(mod2016, col=6, lwd=2.5)
+          
+            #2017
+            plot(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017, main="2017",
+              xlab = "Happiness Score", ylab = "Income")
+                  abline(mod2017, col=7, lwd=2.5)
+                  
+            #all time regression (2015,2016 & 2017)
+              regression_3years <- data.frame(
+                score = c(hap_inc$Happiness_Score2015,hap_inc$Happiness_Score2016,hap_inc$Happiness_Score2017),
+                income = c(hap_inc$Annual_Gross2015, hap_inc$Annual_Gross2016, hap_inc$Annual_Gross2017)
+              )
+              
+              #scatterplot with lines produced from linear modelling
+              plot(regression_3years$score, regression_3years$income, main="All Time - Regression",
+                xlab = "Happiness Score", ylab = "Income"
+              ) + abline(mod2015, col=5, lwd=2) + abline(mod2016, col=6, lwd=2) + abline(mod2017, col=7, lwd=2)
+            
+              plot(hap_inc)
+              
+            #correlation
+            cor(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015)
+            cor(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016)
+            cor(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017)
+            
+
+        #histogram
+                #theme package
+                install.packages('hrbrthemes')
+                library(hrbrthemes)
+                
+                #dataframe creation
+                hist3Years <- data.frame(
+                  type = c( rep("2017"), rep("2016"), rep("2015")),
+                  value = c(hap_inc$Happiness_Score2015, hap_inc$Happiness_Score2016, hap_inc$Happiness_Score2017)
+                )
+                
+                #histogram showing frequency of happiness rates
+                ggplot(hist3Years, aes(x = value, fill = type)) +  theme_ipsum() +             
+                  geom_histogram(position = "identity", alpha = 0.5, bins = 13)
+                
+                #happiness rates heatmap
+                
