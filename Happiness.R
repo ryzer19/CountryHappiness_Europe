@@ -1,33 +1,24 @@
-install.packages("dplyr")
-install.packages("ggplot2")
+install.packages("tidyverse")
+install.packages("data.table")
 install.packages("plotly")
-install.packages("readr")
-library(dplyr)
-library(data.table)
-library(ggplot2)
-library(plotly)
-library(readr)
-library(caTools)
-library(factoextra)
-library(tidyverse)
-library(cluster)
-library(gridExtra)
+install.packages("caTools")
+install.packages("factoextra")
+install.packages("cluster")
+install.packages("gridExtra")
+
+library(data.table) #allows join/subset functions
+library(plotly)     #map visualisation
+library(caTools)    #maths functions
+library(factoextra) #allows visualisation of cluster output
+library(tidyverse)  #ggplot2, dplyr, readr
+library(cluster)    #clustering
+library(gridExtra)  #allows graphs to be displayed in groups
 
 
-#reading datasets
-
-  #(Ryan)
-countries_income <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/countries.csv')
-year1 <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/year1.csv')
-year2 <- read.csv(file = '/Users/ryanjohnston/development/r/datamining/year2.csv')
-
-  #(Darragh)
+#Read in CSV files
 countries_income <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/countries.csv')
 year1 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/year1.csv')
 year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/year2.csv')
-cluster_data2015 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2015.csv", header = TRUE, row.names = 1, sep = ",")
-cluster_data2016 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2016.csv", header = TRUE, row.names = 1, sep = ",")
-cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2017.csv", header = TRUE, row.names = 1, sep = ",")
 
 
 #Pre-Process Data
@@ -107,14 +98,9 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
 
               #creating data frame with happiness score & annual income figures
                   #reading in 3 year income dataset
-                      income_3year <- read.csv("/Users/ryanjohnston/development/r/datamining/income_3years.csv")
-                  
                       income_3year <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/income_3years.csv")
-                  #reading in happiness 3 years
-                      happiness2015 <- read.csv('/Users/ryanjohnston/development/r/datamining/2015.csv')
-                      happiness2016 <- read.csv('/Users/ryanjohnston/development/r/datamining/2016.csv')
-                      happiness2017 <- read.csv('/Users/ryanjohnston/development/r/datamining/2017.csv')
-                      
+      
+                  #reading in happiness factors datasets for 3 years
                       happiness2015 <- read.csv('C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/2015.csv')
                       happiness2016 <- read.csv('C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/2016.csv')
                       happiness2017 <- read.csv('C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/2017.csv')
@@ -135,7 +121,7 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                                                              20,21,22,23,24,25,27,
                                                              28,29,30,31,32,33,34,35)]
                                 
-                                #creates criteria variable which stores two strings
+                                #creates criteria variable which stores two strings, to help filter unnecessary data
                                 criteria <- c("Central and Eastern Europe", "Western Europe")
                                      #deletes everything that doesn't contain the two strings in the criteria variable
                                      happiness <- happiness[happiness$Region.x %in% criteria, ]
@@ -157,33 +143,30 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                                                                        "Happiness_Score2016","Happiness_Score2017",
                                                                        "Annual_Gross2015","Annual_Gross2016","Annual_Gross2017")
                                     
-    #Cluster data frame creation (run once then read in at the top)
-        #2015 - D
+    #Cluster data frame creation (makes first column country names(column with no name) to allow for country labels on cluster map)
+        #2015
         vars <- c("Country", "Happiness_Score2015", "Annual_Gross2015")
         cluster_data2015 <- hap_inc[vars]
         write.csv(cluster_data2015,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2015.csv", row.names = FALSE)
         cluster_data2015 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2015.csv", header = TRUE, row.names = 1, sep = ",")
         
-        #2016 - D
+        #2016
         vars <- c("Country", "Happiness_Score2016", "Annual_Gross2016")
         cluster_data2016 <- hap_inc[vars]
         write.csv(cluster_data2016,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2016.csv", row.names = FALSE)
         cluster_data2016 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2016.csv", header = TRUE, row.names = 1, sep = ",")
         
-        #2017 - D
+        #2017
         vars <- c("Country", "Happiness_Score2017", "Annual_Gross2017")
         cluster_data2017 <- hap_inc[vars]
         write.csv(cluster_data2017,"C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2017.csv", row.names = FALSE)
         cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/countryhappiness_europe/cluster_data2017.csv", header = TRUE, row.names = 1, sep = ",")
-        
-        #2015 - R
-        cluster_data2015 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2015.csv', header = TRUE, row.names = 1, sep = ",")
-        cluster_data2016 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2016.csv', header = TRUE, row.names = 1, sep = ",")
-        cluster_data2017 <- read.csv('/Users/ryanjohnston/development/r/datamining/cluster_data2017.csv', header = TRUE, row.names = 1, sep = ",")
-        
+
 #Visualisations & Data Mining Techniques 
         
-  #Map 2015
+  #Maps 2015
+        
+        #Happiness Map
     happiness_map_2015 = plot_geo(hap_inc,
                                locationmode = 'europe') %>%
         
@@ -197,13 +180,36 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                      col = 'heat') %>%
           
         layout(geo = list(scope = 'europe'),
-                 title = "Country's With The Highest Happiness Score 2015") %>%
+                 title = "Country's Happiness Scores 2015") %>%
           
         config(displayModeBar = FALSE)
         
     happiness_map_2015
+        
+        #Income Map
     
-  #Map 2016
+    income_map_2015 = plot_geo(hap_inc,
+                                  locationmode = 'europe') %>%
+      
+      add_trace (locations = ~Country_ID,
+                 text = paste0('Country: ', hap_inc$Country, '<br>Happiness Score: ', hap_inc$Happiness_Score2015, '<br>Annual Income: ', hap_inc$Annual_Gross2015),
+                 hoverinfo = 'text',
+                 z = ~Annual_Gross2015,
+                 zmin = 0,
+                 zmax = max(hap_inc$Annual_Gross2015),
+                 color = ~Annual_Gross2015,
+                 col = 'heat') %>%
+      
+      layout(geo = list(scope = 'europe'),
+             title = "Country's average gross annual income 2015") %>%
+      
+      config(displayModeBar = FALSE)
+    
+    income_map_2015
+    
+  #Maps 2016
+    
+        #Happiness Map
     happiness_map_2016 = plot_geo(hap_inc,
                                locationmode = 'europe') %>%
       
@@ -217,13 +223,36 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                  col = 'heat') %>%
       
       layout(geo = list(scope = 'europe'),
-             title = "Country's With The Highest Happiness Score 2016") %>%
+             title = "Country's Happiness Scores 2016") %>%
       
       config(displayModeBar = FALSE)
     
     happiness_map_2016
     
-  #Map 2017
+        #Income Map
+    
+    income_map_2016 = plot_geo(hap_inc,
+                               locationmode = 'europe') %>%
+      
+      add_trace (locations = ~Country_ID,
+                 text = paste0('Country: ', hap_inc$Country, '<br>Happiness Score: ', hap_inc$Happiness_Score2015, '<br>Annual Income: ', hap_inc$Annual_Gross2015),
+                 hoverinfo = 'text',
+                 z = ~Annual_Gross2016,
+                 zmin = 0,
+                 zmax = max(hap_inc$Annual_Gross2016),
+                 color = ~Annual_Gross2016,
+                 col = 'heat') %>%
+      
+      layout(geo = list(scope = 'europe'),
+             title = "Country's average gross annual income 2016") %>%
+      
+      config(displayModeBar = FALSE)
+    
+    income_map_2016
+    
+  #Maps 2017
+    
+        #Happiness Map
     happiness_map_2017 = plot_geo(hap_inc,
                                locationmode = 'europe') %>%
       
@@ -237,50 +266,71 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                  col = 'heat') %>%
       
       layout(geo = list(scope = 'europe'),
-             title = "Country's With The Highest Happiness Score 2017") %>%
+             title = "Country's Happiness Scores 2017") %>%
       
       config(displayModeBar = FALSE)
     
     happiness_map_2017
     
-  #Net income x Happiness score Plot https://www.youtube.com/watch?v=BB2O4VCu5j8
-    model_data = subset(happiness_factors, select = c(Happiness_Score, GDP_PerCapita, Family, Life_Expectancy, Freedom, Corruption_Perception, Generosity, Annual_Net))
+        #Income Map
+    income_map_2017 = plot_geo(hap_inc,
+                               locationmode = 'europe') %>%
+      
+      add_trace (locations = ~Country_ID,
+                 text = paste0('Country: ', hap_inc$Country, '<br>Happiness Score: ', hap_inc$Happiness_Score2015, '<br>Annual Income: ', hap_inc$Annual_Gross2015),
+                 hoverinfo = 'text',
+                 z = ~Annual_Gross2017,
+                 zmin = 0,
+                 zmax = max(hap_inc$Annual_Gross2017),
+                 color = ~Annual_Gross2017,
+                 col = 'heat') %>%
+      
+      layout(geo = list(scope = 'europe'),
+             title = "Country's average gross annual income 2017") %>%
+      
+      config(displayModeBar = FALSE)
     
-    ggplot(model_data,aes(x=Happiness_Score,y=Annual_Net))+geom_point()+geom_smooth(method = "lm",se=F)
+    income_map_2017
         
   #Model creation & testing
+    #Data splitting
     model_data = subset(happiness_factors, select = c(Happiness_Score, GDP_PerCapita, Family, Life_Expectancy, Freedom, Corruption_Perception, Generosity, Annual_Net))
         
-    sample.split(model_data$Happiness_Score, SplitRatio = 0.90) -> split_index     #sample split makes 90% of values true
+    sample.split(model_data$Happiness_Score, SplitRatio = 0.90) -> split_index #sample split makes 90% of values true
     train <- subset (model_data,split_index==T) #train is 35 values (90%)
     test <- subset (model_data,split_index==F) #test gives 4 values (10%)
     nrow(train) #number of rows
     nrow(test) #number of rows
         
-  #Building models
-    lm(Happiness_Score~.,data=train) -> model1
-    predict(model1,test)->result
-    cbind(actual=test$Happiness_Score,predicted=result)->compare_results
-    as.data.frame(compare_results)->compare_results
-    compare_results$actual-compare_results$predicted->error
-    cbind(compare_results,error)->compare_results
-    sqrt(mean(compare_results$error^2))->rmse1
-    rmse1
+    #Building models - *used to determine which factor has the highest affect on the happiness score* 
+        #model 1
+        lm(Happiness_Score~.,data=train) -> model1
+        predict(model1,test)->result
+        cbind(actual=test$Happiness_Score,predicted=result)->compare_results
+        as.data.frame(compare_results)->compare_results
+        compare_results$actual-compare_results$predicted->error
+        cbind(compare_results,error)->compare_results
+        sqrt(mean(compare_results$error^2))->rmse1
+        rmse1 #root mean square error - closer to 0 means less error and better results
+            
+        summary(model1) #more stars means higher correlation with the intercept value (happiness score)
+            
+        #model 2 - less happiness factors
+        lm(Happiness_Score~.-Life_Expectancy-Freedom-GDP_PerCapita-Corruption_Perception,data=train) -> model2
+        predict(model2,test)->result2
+        cbind(actual=test$Happiness_Score,predicted=result2)->compare_results2
+        as.data.frame(compare_results2)->compare_results2
+        compare_results2$actual-compare_results2$predicted->error
+        cbind(compare_results2,error)->compare_results2
+        sqrt(mean(compare_results2$error^2))->rmse2
+        rmse2 
+            
+        summary(model2)
         
-    summary(model1)
-        
-    lm(Happiness_Score~.-Life_Expectancy-Freedom-Corruption_Perception,data=train) -> model2
-    predict(model2,test)->result2
-    cbind(actual=test$Happiness_Score,predicted=result2)->compare_results2
-    as.data.frame(compare_results2)->compare_results2
-    compare_results2$actual-compare_results2$predicted->error
-    cbind(compare_results2,error)->compare_results2
-    sqrt(mean(compare_results2$error^2))->rmse2
-    rmse2
-        
-    summary(model2)
+#Clustering
         
   #Kmeans Cluster Plot 2015
+        #clusters created with different number of centers
     k2 <- kmeans(cluster_data2015, centers = 2, nstart = 25)
     fviz_cluster(k2, data = cluster_data2015)
     
@@ -288,12 +338,14 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
     k4 <- kmeans(cluster_data2015, centers = 4, nstart = 25)
     k5 <- kmeans(cluster_data2015, centers = 5, nstart = 25)
     
+        #clusters displayed side by side
     p1 <- fviz_cluster(k2, geom = "point", data = cluster_data2015) + ggtitle("k = 2")
     p2 <- fviz_cluster(k3, geom = "point", data = cluster_data2015) + ggtitle("k = 3")
     p3 <- fviz_cluster(k4, geom = "point", data = cluster_data2015) + ggtitle("k = 4")
     p4 <- fviz_cluster(k5, geom = "point", data = cluster_data2015) + ggtitle("k = 5")
     grid.arrange(p1, p2, p3, p4, nrow = 2)
     
+        #graph created to determine best number of centers
     wssplot <- function(data, max_clusters=15) {
       wss <- (nrow(data)-1)*sum(apply(data,2,var))
       for (k in 2:max_clusters){
@@ -367,12 +419,6 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
     k2 <- kmeans(cluster_data2017, centers = 3, nstart = 25)
     fviz_cluster(k2, data = cluster_data2017, main = "Cluster Plot 2017")
     
-  #Display all clusters
-    p1 <- fviz_cluster(k2, geom = "point", data = cluster_data2015) + ggtitle("Cluster 2015")
-    p2 <- fviz_cluster(k2, geom = "point", data = cluster_data2016) + ggtitle("Cluster 2016")
-    p3 <- fviz_cluster(k2, geom = "point", data = cluster_data2017) + ggtitle("Cluster 2017")
-    grid.arrange(p1, p2, p3, nrow = 2)
-    
     #LINEAR REGRESSION
         #fitting linear model (y, x)
         mod2015 <- lm(hap_inc$Annual_Gross2015 ~ hap_inc$Happiness_Score2015)
@@ -400,17 +446,16 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                 income = c(hap_inc$Annual_Gross2015, hap_inc$Annual_Gross2016, hap_inc$Annual_Gross2017)
               )
               
-              #scatterplot with lines produced from linear modelling
+            #scatterplot with lines produced from linear modelling - shows all 3 years of data
               plot(regression_3years$score, regression_3years$income, main="All Time - Regression",
                 xlab = "Happiness Score", ylab = "Income"
               ) + abline(mod2015, col=5, lwd=2) + abline(mod2016, col=6, lwd=2) + abline(mod2017, col=7, lwd=2)
-            
-              plot(hap_inc)
               
-            #correlation
-            cor(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015)
-            cor(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016)
-            cor(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017)
+            #correlation between happiness & gross income for the year
+              #closer to 1 indicates strong(high impact on value) correlation
+              cor(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015)
+              cor(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016)
+              cor(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017)
             
 
         #histogram
@@ -421,20 +466,22 @@ cluster_data2017 <- read.csv("C:/Users/darra/OneDrive/Documents/datamining/count
                 #dataframe creation
                 hist3Years <- data.frame(
                   type = c( rep("2017"), rep("2016"), rep("2015")),
-                  value = c(hap_inc$Happiness_Score2015, hap_inc$Happiness_Score2016, hap_inc$Happiness_Score2017)
+                  value = c(hap_inc$Happiness_Score2017, hap_inc$Happiness_Score2016, hap_inc$Happiness_Score2015)
                 )
                 
+              
                 #histogram showing frequency of happiness rates
                 ggplot(hist3Years, aes(x = value, fill = type)) +  theme_ipsum() +             
                   geom_histogram(position = "identity", alpha = 0.5, bins = 13)
                 
-                #happiness rates heatmap
+                
+                #happiness factors heatmap (related to model 2) - used to show correlation between high impact factors
                 install.packages('heatmaply')
                 library(heatmaply)
                 
                 mat <- happiness_factors
                 rownames(mat) <- mat[,2]
-                mat <- mat %>% dplyr::select(-Country, -Country_ID, -Annual_Net, -Monthly_Net)
+                mat <- mat %>% dplyr::select(-Country, -GDP_PerCapita, -Country_ID, -Life_Expectancy, -Freedom, -Monthly_Net, -Corruption_Perception)
                 mat <- as.matrix(mat)
                 
                 #plotting heat map
