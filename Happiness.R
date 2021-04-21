@@ -1,10 +1,12 @@
-install.packages("tidyverse")
-install.packages("data.table")
-install.packages("plotly")
-install.packages("caTools")
-install.packages("factoextra")
-install.packages("cluster")
-install.packages("gridExtra")
+#install.packages("tidyverse")
+#install.packages("data.table")
+#install.packages("plotly")
+#install.packages("caTools")
+#install.packages("factoextra")
+#install.packages("cluster")
+#install.packages("gridExtra")
+#install.packages("heatmaply")
+#install.packages("hrbrthemes")
 
 library(data.table) #allows join/subset functions
 library(plotly)     #map visualisation
@@ -13,6 +15,8 @@ library(factoextra) #allows visualisation of cluster output
 library(tidyverse)  #ggplot2, dplyr, readr
 library(cluster)    #clustering
 library(gridExtra)  #allows graphs to be displayed in groups
+library(heatmaply)  #allows heatmap to be created
+library(hrbrthemes) #themes histogram
 
 
 #Read in CSV files
@@ -295,7 +299,8 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
   #Model creation & testing
     #Data splitting
     model_data = subset(happiness_factors, select = c(Happiness_Score, GDP_PerCapita, Family, Life_Expectancy, Freedom, Corruption_Perception, Generosity, Annual_Net))
-        
+    
+    set.seed(1290)    
     sample.split(model_data$Happiness_Score, SplitRatio = 0.90) -> split_index #sample split makes 90% of values true
     train <- subset (model_data,split_index==T) #train is 35 values (90%)
     test <- subset (model_data,split_index==F) #test gives 4 values (10%)
@@ -459,10 +464,6 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
             
 
         #histogram
-                #theme package
-                install.packages('hrbrthemes')
-                library(hrbrthemes)
-                
                 #dataframe creation
                 hist3Years <- data.frame(
                   type = c( rep("2017"), rep("2016"), rep("2015")),
@@ -476,9 +477,6 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
                 
                 
                 #happiness factors heatmap (related to model 2) - used to show correlation between high impact factors
-                install.packages('heatmaply')
-                library(heatmaply)
-                
                 mat <- happiness_factors
                 rownames(mat) <- mat[,2]
                 mat <- mat %>% dplyr::select(-Country, -GDP_PerCapita, -Country_ID, -Life_Expectancy, -Freedom, -Monthly_Net, -Corruption_Perception)
