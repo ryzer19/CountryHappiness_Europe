@@ -426,24 +426,61 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
     
     #LINEAR REGRESSION
         #fitting linear model (y, x)
-        mod2015 <- lm(hap_inc$Annual_Gross2015 ~ hap_inc$Happiness_Score2015)
-        mod2016 <- lm(hap_inc$Annual_Gross2016 ~ hap_inc$Happiness_Score2016)
-        mod2017 <- lm(hap_inc$Annual_Gross2017 ~ hap_inc$Happiness_Score2017)
-    
-        #income/happiness scatter plot
-            #2015
-            plot(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015, main="2015",
-                 xlab = "Happiness Score", ylab = "Income")
-                  abline(mod2015, col=5, lwd=2.5)
-            #2016
-            plot(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016, main="2016",
-              xlab = "Happiness Score", ylab = "Income")
-                 abline(mod2016, col=6, lwd=2.5)
-          
-            #2017
-            plot(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017, main="2017",
-              xlab = "Happiness Score", ylab = "Income")
-                  abline(mod2017, col=7, lwd=2.5)
+        model2015 <- lm(Annual_Gross2015 ~ Happiness_Score2015, data=hap_inc)
+        model2016 <- lm(Annual_Gross2016 ~ Happiness_Score2016, data=hap_inc)
+        model2017 <- lm(Annual_Gross2017 ~ Happiness_Score2017, data=hap_inc)
+        
+        #income/happiness scatter plots
+          #2015
+        summary(hap_inc$Happiness_Score2015)
+        
+        newx <- seq(4.218, 7.587, by=0.05)
+        plot(hap_inc$Happiness_Score2015, hap_inc$Annual_Gross2015, xlab="Happiness Score", ylab="Income", main="2015")
+        abline(model2015, col="lightblue", lwd = 2.5)
+        
+        conf_interval <- predict(model2015, newdata=data.frame(Happiness_Score2015=newx), interval="confidence",
+                                 level = 0.95)
+        lines(newx, conf_interval[,2], col="blue", lty=2)
+        lines(newx, conf_interval[,3], col="blue", lty=2)
+        
+        pred_interval <- predict(model2015, newdata=data.frame(Happiness_Score2015=newx), interval="prediction",
+                                 level = 0.95)
+        lines(newx, pred_interval[,2], col="orange", lty=2)
+        lines(newx, pred_interval[,3], col="orange", lty=2)
+        
+          #2016
+        summary(hap_inc$Happiness_Score2016)
+        
+        newx <- seq(4.217, 7.526, by=0.05)
+        plot(hap_inc$Happiness_Score2016, hap_inc$Annual_Gross2016, xlab="Happiness Score", ylab="Income", main="2016")
+        abline(model1, col="pink", lwd = 2.5)
+        
+        conf_interval <- predict(model2016, newdata=data.frame(Happiness_Score2016=newx), interval="confidence",
+                                 level = 0.95)
+        lines(newx, conf_interval[,2], col="blue", lty=2)
+        lines(newx, conf_interval[,3], col="blue", lty=2)
+        
+        pred_interval <- predict(model2016, newdata=data.frame(Happiness_Score2016=newx), interval="prediction",
+                                 level = 0.95)
+        lines(newx, pred_interval[,2], col="orange", lty=2)
+        lines(newx, pred_interval[,3], col="orange", lty=2)
+        
+          #2017
+        summary(hap_inc$Happiness_Score2017)
+        
+        newx <- seq(4.096, 7.537, by=0.05)
+        plot(hap_inc$Happiness_Score2017, hap_inc$Annual_Gross2017, xlab="Happiness Score", ylab="Income", main="2017")
+        abline(model1, col="yellow", lwd = 2.5)
+        
+        conf_interval <- predict(model2017, newdata=data.frame(Happiness_Score2017=newx), interval="confidence",
+                                 level = 0.95)
+        lines(newx, conf_interval[,2], col="blue", lty=2)
+        lines(newx, conf_interval[,3], col="blue", lty=2)
+        
+        pred_interval <- predict(model2017, newdata=data.frame(Happiness_Score2017=newx), interval="prediction",
+                                 level = 0.95)
+        lines(newx, pred_interval[,2], col="orange", lty=2)
+        lines(newx, pred_interval[,3], col="orange", lty=2)
                   
             #all time regression (2015,2016 & 2017)
               regression_3years <- data.frame(
@@ -454,7 +491,7 @@ year2 <- read.csv(file = 'C:/Users/darra/OneDrive/Documents/datamining/countryha
             #scatterplot with lines produced from linear modelling - shows all 3 years of data
               plot(regression_3years$score, regression_3years$income, main="All Time - Regression",
                 xlab = "Happiness Score", ylab = "Income"
-              ) + abline(mod2015, col=5, lwd=2) + abline(mod2016, col=6, lwd=2) + abline(mod2017, col=7, lwd=2)
+              ) + abline(model2015, col=5, lwd=2) + abline(model2016, col=6, lwd=2) + abline(model2017, col=7, lwd=2)
               
             #correlation between happiness & gross income for the year
               #closer to 1 indicates strong(high impact on value) correlation
